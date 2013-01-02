@@ -1,0 +1,17 @@
+#Pacman
+PKGS:NB of pkg
+NEWS:the news
+
+#Weather
+TEMP:the temp
+WEATHER:the weather
+WEATHERICON:return a char for a font I used
+TOMORROW:Sunny
+TOM_TEMP:17°C
+
+#Emails
+user_in_file:return the last title of the email
+user_in_fileN:return the number of email in inbox
+
+#Mangas
+name_of_manga:chapter:last-date-updated
