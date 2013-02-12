@@ -9,7 +9,7 @@ def check_news(LOCATION):
     br.set_handle_robots(False)
     br.set_handle_redirect(True)
     br.addheaders = [('User-agent', 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 5_1 like Mac OS X; en-US) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B179 Safari/7534.48.3')]
-    br.open("http://www.archlinux.org/news/", timeout=20)
+    br.open("https://www.archlinux.org/news/", timeout=20)
     i=0
     for a in br.links():
         if i==20:

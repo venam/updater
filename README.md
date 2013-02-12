@@ -2,6 +2,10 @@ Venam updater
 =================
 
 ******
+NEEDS TO GET UPDATED AS I DON'T USE HOTMAIL ANYMORE
+-------
+I'll merge the new stuff later when I have time and want to backup.
+
 This is some modules with a front-end
 to show status I want to follow
 
