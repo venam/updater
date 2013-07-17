@@ -1,6 +1,6 @@
 ##Venam updater
 
-This is an updaater program that comes with a frontend.
+This is an updater program that comes with a frontend.
 It shows updates about:
 * packages
 * news
