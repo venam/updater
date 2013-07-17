@@ -19,7 +19,9 @@ It shows updates about:
 python2 /home/raptor/.my_updater/killer.py;
 python2 /home/raptor/.my_updater/pythondaemon.py /home/raptor/.my_updater/updater.py;
 </pre>
-* start the frontend script.
+* Start the frontend script.
+* Quit the frontend by pressing `q` or `Q`
+* Kill the updater.py daemon by using the killer.py script
 
 ###Scrot
 ![Srcot](https://raw.github.com/venam/updater/master/scrot.png)
