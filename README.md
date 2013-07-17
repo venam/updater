@@ -14,10 +14,12 @@ It shows updates about:
 * Update the updater.py file to your needs.
 * Add a symlink to uppdater.py and updater-frontend.py to your bin or create a script in you bin dir starting the program.
 * You can use this as an example. :
-`
+<pre>
 #!/bin/bash
 python2 /home/raptor/.my_updater/killer.py;
 python2 /home/raptor/.my_updater/pythondaemon.py /home/raptor/.my_updater/updater.py;
-`
+</pre>
 * start the frontend script.
 
+###Scrot
+![Srcot](https://raw.github.com/venam/updater/master/scrot.png)
