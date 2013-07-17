@@ -16,14 +16,14 @@
 import time
 import os
 import sys
+import re
 import get_char2 as getchar
 from threading import Thread
 import thread
-
+import subprocess
 #global vars
-my_config_file          = "/home/raptor/.my_fave_conky/config"
-end_of_program          = False
-
+LOCATION             = "/home/raptor/.my_updater/config"
+WHOLE_LINE           = True
 #Text Foreground Colors
 fg_black                = '\033[0;30m'
 fg_red                  = '\033[0;31m'
@@ -41,7 +41,6 @@ fg_lblue                = '\033[1;34m'
 fg_pink                 = '\033[1;35m'
 fg_lcyan                = '\033[1;36m'
 fg_white                = '\033[1;37m'
-
 #Text Background Colors
 bg_red                  = '\033[0;41m'
 bg_green                = '\033[0;42m'
@@ -50,7 +49,6 @@ bg_blue                 = '\033[0;44m'
 bg_purple               = '\033[0;45m'
 bg_cyan                 = '\033[0;46m'
 bg_gray                 = '\033[0;47m'
-
 #Attributes
 at_normal               = '\033[0m'
 at_bold                 = '\033[1m'
@@ -67,7 +65,6 @@ at_underloff            = '\033[24m'
 at_blinkoff             = '\033[25m'
 at_reverseoff           = '\033[27m'
 at_strikeoff            = '\033[29m'
-
 #Colors to use [last one is the normal]
 color      = [fg_green+at_bold+at_underl ,
               fg_cyan+at_bold+at_underl  ,
@@ -75,16 +72,16 @@ color      = [fg_green+at_bold+at_underl ,
               fg_yellow+at_bold+at_underl,
               at_normal+at_boldoff+at_strikeoff+at_blinkoff+at_underloff+at_italicsoff
              ]
-whole_line = True
 
 class front_end():
-    
+
     #-------init some global var-------#
     def __init__(self,config_file):
-        self.config_file = config_file
-        self.old_config  = open(config_file).read()
-        self.date        = ""
-        self.clock       = ""
+        self.config_file    = config_file
+        self.old_config     = open(config_file).read()
+        self.date           = ""
+        self.clock          = ""
+        self.end_of_program = False
 
     #-------nice string for time-------#
     def get_time(self):
@@ -95,66 +92,81 @@ class front_end():
         hour       = str(localtime.tm_hour)
         min        = str(localtime.tm_min)
         sec        = str(localtime.tm_sec)
-
         self.date  = year + '/' + month + '/' + day
         self.clock = hour + ':' + min   + ':' + sec
 
-    #--------'q' or 'Q' to exit---------#  
+    #--------'q' or 'Q' to exit---------#
     def exit_program(self):
-        global end_of_program
-        k = ""
-        inkey = getchar.getch()
-        #for i in xrange(sys.maxint):
-        k = inkey
-        if k=='q' or k=='Q':
-            #break
-            end_of_program =True
-            thread.exit()
-        else:
-            time.sleep(1)
-            self.exit_program()
+        while self.end_of_program ==False:
+            #time.sleep(1)
+            inkey = getchar.getch()
+            #for i in xrange(sys.maxint):
+            if inkey =='q' or inkey=='Q':
+                #break
+                self.end_of_program = True
+                return
+                #sys.exit(0)
+                #self kill by sending SIGTERM signal
+                #os.kill(int( os.getpid() ), 15)
 
     #--------display what we want--------#
     def print_on_screen(self):
         global color
         i = 0
-        while 1:
-            if end_of_program == False:
-                os.system( [ 'clear', 'cls' ][ os.name == 'nt' ] )
-                if open(self.config_file,'r').read() != self.old_config:
-                    self.old_config = open(self.config_file,'r').read()
-                    self.get_time()
-                print "       "+ fg_lred +self.clock+"    "+  fg_lgray+"["+fg_pink+at_italics+self.date+fg_lgray+ at_italicsoff+"]"
-                for a in open(self.config_file,'r').readlines():
-                    if( i==len(color)-1 ):
-                        i = 0
-                    a = a.replace("\n","")
-                    a = a.replace(":", fg_lcyan+ ":" + color[len(color)-1])
+        while self.end_of_program == False:
+            #takes the date
+            today_is = subprocess.check_output(["date","+%a-%b-%e"]).replace("\n","")
+            #clear the screen
+            os.system( [ 'clear', 'cls' ][ os.name == 'nt' ] )
+            # check the date
+            #if open(self.config_file,'r').read() != self.old_config:
+            #    self.old_config = open(self.config_file,'r').read()
+            #    self.get_time()
+            #print "       "+ fg_lred +self.clock+"    "+  fg_lgray+"["+fg_pink+at_italics+self.date+fg_lgray+ at_italicsoff+"]"
+            print at_bold+fg_pink +"__{  "+at_blink+fg_pink+"UPDATER"+at_bold+ at_blinkoff+fg_pink +"  }__"+at_normal
+            for a in open(self.config_file,'r').readlines():
+                if( i==len(color)-1 ):
+                    i = 0
+                a = a.replace("\n","")
+                #if there's 2 : then color what is after in green
+                if len(re.findall("(:)",a))==2:
+                    a = a.replace(":",":"+fg_green,1)
+                    #the date is the 3 one
+                    the_date = a.split(":")[2]
+                    #if it's today then color it to pink
+                    if the_date == today_is:
+                        a = a.replace(the_date,fg_pink +the_date+color[len(color)-1])
+                #change : to a cyan :
+                a = a.replace(":", fg_lcyan+ ":" + color[len(color)-1])
+                #if line start with # choose a color[i] from the palette
+                if WHOLE_LINE:
                     if a.startswith('#'):
-                        if whole_line == False:
-                            a = a.replace('#' , color[i]+"#"+color[len(color)-1])
-                        else:
-                            a = a.replace('#' , color[i]+"#")
+                        a = a.replace('#' , color[i]+"#")
                         i+=1
-                    if whole_line:
-                        print a+color[len(color)-1]
-                    else:
-                        print a
-                time.sleep(4)
-            else:
-                break
+                    print a+color[len(color)-1]
+                else:
+                    if a.startswith('#'):
+                        a = a.replace('#' , color[i]+"#"+color[len(color)-1])
+                        i+=1
+                    print a
+            #check if the program needs to end or sleep
+            for a in xrange(8):
+                if self.end_of_program == False:
+                    time.sleep(1)
+                else:
+                    return
 
     #-------main foo of the class-------#
     def run(self):
         self.get_time()
-        Thread (target = self.exit_program).start()
-        Thread (target = self.print_on_screen).start()
-        #while end_of_program == False:
-        #print "\n\nThe Program exited successfully\n\n"
-        #thread.exit()
-
+        t1 = Thread (target = self.exit_program)
+        t2 = Thread (target = self.print_on_screen)
+        t1.start()
+        t2.start()
+        t1.join()
+        print "\n\nThe Program exited successfully\n\n"
 
 #------------RUN IT------------#
-front_end(my_config_file).run()
+front_end(LOCATION).run()
 
 #END!

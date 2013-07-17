@@ -14,7 +14,7 @@ def main():
           system("python2 "+ argv[1]) #here I use python2 but you can change it
           time.sleep(60)              #you can change the sleeping time for the loop
       except:
-          time.sleep(120)
+          time.sleep(60)
           system("python2 "+ argv[1])
 
 # Dual fork

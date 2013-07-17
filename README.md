@@ -1,25 +1,23 @@
-Venam updater
-=================
+##Venam updater
 
-******
-NEEDS TO GET UPDATED AS I DON'T USE HOTMAIL ANYMORE
--------
-I'll merge the new stuff later when I have time and want to backup.
+This is an updaater program that comes with a frontend.
+It shows updates about:
+* packages
+* news
+* weather
+* mangas
+* emails
 
-This is some modules with a front-end
-to show status I want to follow
-
-[*] How to use
-
-    Change the configs in the updater.py
-    
-    Change the config file
-
-    #Add the updater.py in your bin dir
-
-    create a small .sh script to start everything as a daemon:
-
-        killall python2;
-
-        python2 /location/of/pythondaemon.py /location/of/updater.py;
+###How to use
+* Install the mechanize module.
+* Open the files updater-frontend.py and updater.py anc change : `LOCATION` by the location of the config file.
+* Update the updater.py file to your needs.
+* Add a symlink to uppdater.py and updater-frontend.py to your bin or create a script in you bin dir starting the program.
+* You can use this as an example. :
+`
+#!/bin/bash
+python2 /home/raptor/.my_updater/killer.py;
+python2 /home/raptor/.my_updater/pythondaemon.py /home/raptor/.my_updater/updater.py;
+`
+* start the frontend script.
 

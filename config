@@ -1,17 +1,36 @@
 #Pacman
-PKGS:NB of pkg
-NEWS:the news
+PKGS:Up-To-Date
+NEWS:TeXLive 2013 update may require user intervention
 
 #Weather
-TEMP:the temp
-WEATHER:the weather
-WEATHERICON:return a char for a font I used
+TEMP:30°C
+WEATHER:Partly Cloudy
 TOMORROW:Sunny
-TOM_TEMP:17°C
-
-#Emails
-user_in_file:return the last title of the email
-user_in_fileN:return the number of email in inbox
+TOM_TEMP:28°C
 
 #Mangas
-name_of_manga:chapter:last-date-updated
+berserk:333:Sun-Jan-13
+bleach:546:Wed-Jul-17
+beelzebub:212:Wed-Jul-10
+claymore:140:Sat-Jun-29
+one-piece:715:Wed-Jul-17
+fairy-tail:343:Thu-Jul-11
+dgray-man:218:Sat-May-25
+naruto:639:Wed-Jul-17
+assassination-classroom:49:Sat-Jul-13
+deadman-wonderland:57:Sat-Jun-29
+judge:16:OLD
+hunter-x-hunter:340:OLD
+shingeki-no-kyojin:47:Sat-Jul- 6
+pastel:131:Sun-Jun-30
+vagabond:316:Sun-Jun-23
+high-school-of-the-dead:30:Wed-Apr-10
+i-am-a-hero:130:Fri-May-10
+the-world-god-only-knows:235:Fri-Jul-12
+watashi-ni-xx-shinasai:49:Wed-May-22
+to-love-ru:163:OLD
+kissxsis:72:Tue-Jun-11
+
+#Emails
+Nb Msg: 0
+- No Emails -

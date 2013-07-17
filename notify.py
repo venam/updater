@@ -1,31 +1,32 @@
 # coding : utf-8
-import subprocess, re,time
+import os,re
 
 def check_pkg(LOCATION):
-    oldnum=re.findall('PKGS:(.*)\n', open(LOCATION+"config", 'r').read())[0]
-    #try:
-    #    subprocess.check_output(['sudo','pacman','-Sy'])
-    #except:
-    #    pass
+    oldnum=re.findall('PKGS:(.*)\n', open(
+        LOCATION+"config", 'r').read()
+        )[0]
     try:
-        number = subprocess.check_output(['pacman','-Qu'])
-        number = number.split("\n")
-        i=0
+        p = os.popen("pacman -Qu |wc -l")
+        p = p.read()
+        p = p.rstrip()
 
-        for a in number:
-            i+=1
-
-        if str(i-1) not in oldnum :
-
-            if i==2:
-                #change the num
-                open(LOCATION+"config.bak","w").write(open(LOCATION+"config", "r").read())
-                open(LOCATION+"config","w").write(open(LOCATION+"config.bak", "r").read().replace("PKGS:"+oldnum, "PKGS:"+"1 New Pkg"))
-            if i>2:
-                open(LOCATION+"config.bak","w").write(open(LOCATION+"config", "r").read())
-                open(LOCATION+"config","w").write(open(LOCATION+"config.bak", "r").read().replace("PKGS:"+oldnum, "PKGS:"+str(i-1)+" New pkgs"))
-
-    except:
-        if oldnum!="Up-To-Date":
-            open(LOCATION+"config.bak","w").write(open(LOCATION+"config", "r").read())
-            open(LOCATION+"config","w").write(open(LOCATION+"config.bak", "r").read().replace("PKGS:"+oldnum, "PKGS:"+"Up-To-Date"))
+        if ':'+p+' New pkg' not in oldnum :
+            if p!= '0':
+                open(LOCATION+"config.bak","w").write(
+                    open(LOCATION+"config", "r").read()
+                    )
+                open(LOCATION+"config","w").write(
+                    open(LOCATION+"config.bak", "r").read().replace(
+                        "PKGS:"+oldnum, "PKGS:"+p+" New Pkg"
+                        )
+                    )
+            else:
+                open(LOCATION+"config.bak","w").write(
+                    open(LOCATION+"config", "r").read()
+                    )
+                open(LOCATION+"config","w").write(
+                    open(LOCATION+"config.bak", "r").read().replace(
+                        "PKGS:"+oldnum, "PKGS:"+"Up-To-Date")
+                        )
+    except Exception,e:
+        print e
