@@ -25,3 +25,8 @@ python2 /home/raptor/.my_updater/pythondaemon.py /home/raptor/.my_updater/update
 
 ###Scrot
 ![Srcot](https://raw.github.com/venam/updater/master/scrot.png)
+
+###TODO
+I'm currently updating the code and adding sub-menus to the interface.
+For example, it would be nice to just press 'D' or 'd' to open the available manga to download and then only have to choose between them to start the mangaDL.
+
