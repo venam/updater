@@ -10,8 +10,7 @@ It shows updates about:
 
 ###How to use
 * Install the mechanize module.
-* Open the files updater-frontend.py and updater.py anc change : `LOCATION` by the location of the config file.
-* Update the updater.py file to your needs.
+* Open the files configuration.py and update to your needs.
 * Add a symlink to uppdater.py and updater-frontend.py to your bin or create a script in you bin dir starting the program.
 * You can use this as an example. :
 <pre>
