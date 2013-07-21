@@ -3,6 +3,8 @@ import re
 import subprocess
 from time import sleep
 import configuration
+from threading import Thread
+import os
 
 class check_the_mangas():
 	def __init__(self,manga_name):
@@ -36,6 +38,11 @@ class check_the_mangas():
 		except:
 			return 0
 
+	def exec_cmd(self):
+		pid = os.fork()
+		os.umask(0)
+		os.system(configuration.MANGA_NEW_CMD.replace("MANGA",self.manga_name))
+
 	def run(self):
 		if( self.test_connection() ):
 			last_chapter = False
@@ -46,12 +53,13 @@ class check_the_mangas():
 					if "is not released yet. If you liked" in self.br.response().read():
 						last_chapter = True
 						if self.manga_name + ":" + str(self.manga_nownumber) not in open(configuration.DATA_FILE, "r").read():
-							os.system(configuration.MANGA_NEW_CMD.replace("MANGA",self.manga_name))
+							Thread(target=self.exec_cmd).start()
 							configuration.backup()
 							open(configuration.DATA_FILE,'w').write(open(configuration.DATA_FILE+".bak", "r").read().replace(self.manga_name+":"+str(self.manga_oldnumber)+":"+ self.manga_olddate, self.manga_name+":"+str(self.manga_nownumber)+":"+self.nowdate))
 					else:
 						self.manga_nownumber = str( int(self.manga_nownumber)+1 )
-			except :
+			except Exception,e :
+				print e
 				if "is not released yet. If you liked" in self.br.response().read():
 					if self.manga_name + ":" + str(self.manga_nownumber) not in open(configuration.DATA_FILE, "r").read():
 						configuration.backup()
