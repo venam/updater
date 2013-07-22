@@ -3,6 +3,7 @@ import subprocess
 import configuration
 import os
 from urllib import URLopener
+from threading import Thread
 
 class check_the_mangas():
 	def __init__(self,manga_name):
