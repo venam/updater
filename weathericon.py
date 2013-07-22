@@ -26,7 +26,7 @@ class weather_checker(object):
             configuration.backup()
             #update the data
             open(configuration.DATA_FILE,"w").write(
-                open(configuration.DATA_FILE + "data.bak", "r").read().replace(
+                open(configuration.DATA_FILE + ".bak", "r").read().replace(
                     "WEATHER:"+someweather, "WEATHER:"+weather
                     )
                 )
