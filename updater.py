@@ -74,17 +74,15 @@ if( mangas.connection() ):
 	except Exception,the_error:
 		print the_error
 
-	try:
 		##
-		for manga in configuration.MANGA_LIST:
+	for manga in configuration.MANGA_LIST:
+		try:
 			mangas.check_the_mangas(manga).run()
 		##
-	except Exception,the_error:
-		print the_error
+		except Exception,the_error:
+			print the_error
 
 	try:
-		##
 		imaploginunix.check_the_email(configuration.IMAP_DOMAIN,configuration.IMAP_USER,configuration.IMAP_PASSWD)
-		###
 	except Exception,the_error:
 		print the_error

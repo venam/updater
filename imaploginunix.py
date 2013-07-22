@@ -13,7 +13,7 @@ FLAGS:
 
 def check_the_email(domain,user,passwd):
 	try:
-		p = imaplib.IMAP4(domain)
+		p = imaplib.IMAP4_SSL(domain)
 		p.login(user,passwd)
 		p.select()
 		index, data   = p.search(None, 'UnSeen')

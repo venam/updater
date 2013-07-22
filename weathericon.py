@@ -1,22 +1,14 @@
 # coding: utf-8
-import mechanize
 import re
 import subprocess
+from urllib import URLopener
 import configuration
 
 class weather_checker(object):
-    def create_browser(self):
-        br=mechanize.Browser()
-        br.set_handle_robots(False)
-        br.set_handle_redirect(True)
-        br.set_handle_gzip(True)
-        br.addheaders = [('User-agent','Mozilla/5.0 (Windows; Windows NT 6.0; rv:13.0) Gecko/20100101 Firefox/13.0.1')]
-        return br
-
     def check_weather(self,br):
-        br.open("http://www.weather.com/weather/tenday/"+configuration.COUNTRY_CODE, timeout=10)
+        response = br.open("http://www.weather.com/weather/tenday/"+configuration.COUNTRY_CODE).readlines()
         weather = ""
-        for a in br.response().readlines():
+        for a in response:
             if 'itemprop=\"weather-phrase\">' in a :
                 weather      = re.findall('itemprop=\"weather-phrase\">([^<]+)</span>', a)[0]
                 break
@@ -30,11 +22,11 @@ class weather_checker(object):
                     "WEATHER:"+someweather, "WEATHER:"+weather
                     )
                 )
-        return br
+        return response
 
-    def check_temp(self,br):
+    def check_temp(self,response):
         #get the temperature
-        for a in br.response().readlines():
+        for a in response:
             if "temperature-fahrenheit" in a:
                 tempe = re.findall('itemprop=\"temperature-fahrenheit\">(\d*)</span>',a)[0]
                 break
@@ -49,11 +41,10 @@ class weather_checker(object):
                 open(configuration.DATA_FILE+".bak", "r").read().replace(
                     "TEMP:"+tempeNOW+"°C", "TEMP:"+tempe+"°C")
                     )
-        return br
 
     def check_tomorrow_weather(self,br):
-        br.open("http://www.weather.com/weather/tomorrow/"+configuration.COUNTRY_CODE, timeout=10)
-        for a in br.response().readlines():
+        response = br.open("http://www.weather.com/weather/tomorrow/"+configuration.COUNTRY_CODE).readlines()
+        for a in response:
             if '<p class="wx-phrase' in a:
                 weather = re.findall('">([^<]+)</',a)[0]
                 break
@@ -67,10 +58,10 @@ class weather_checker(object):
                     "TOMORROW:"+old_weather, "TOMORROW:"+weather
                     )
                 )
-        return br
+        return response
 
-    def check_tom_celsius(self,br):
-        for a in br.response().readlines():
+    def check_tom_celsius(self,response):
+        for a in response:
             if '<p class="wx-temp">' in a:
                 tempe    = re.findall(" ([0-9]+)<sup>&deg",a)[0]
                 break
@@ -84,14 +75,11 @@ class weather_checker(object):
                     "TOM_TEMP:"+tempeNOW+"°C", "TOM_TEMP:"+tempe+"°C"
                     )
                 )
-        return br
-
 
     def procedure(self):
-        br = self.create_browser()
-        br = self.check_weather(br)
-        br = self.check_temp(br)
-        br = self.check_tomorrow_weather(br)
-        br = self.check_tom_celsius(br)
-
+        br = URLopener()
+        response = self.check_weather(br)
+        self.check_temp(response)
+        response = self.check_tomorrow_weather(br)
+        self.check_tom_celsius(response)
 #END

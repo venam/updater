@@ -1,10 +1,8 @@
-import mechanize
 import re
 import subprocess
-from time import sleep
 import configuration
-from threading import Thread
 import os
+from urllib import URLopener
 
 class check_the_mangas():
 	def __init__(self,manga_name):
@@ -14,7 +12,7 @@ class check_the_mangas():
 		self.manga_nownumber = self.manga_oldnumber
 		self.manga_olddate   = self.get_date  ()
 		self.nowdate		 = self.today_date()
-		self.br			     = mechanize.Browser()
+		self.br			     = URLopener()
 
 	def get_number(self):
 		return re.findall(self.manga_name+':([0-9]+):',self.myfile)[0]
@@ -28,10 +26,8 @@ class check_the_mangas():
 	#return 1 if the connection is working
 	def test_connection(self):
 		try:
-			self.br = mechanize.Browser()
-			self.br.set_handle_robots(False)
-			self.br.open(configuration.WEBSITE_TO_CHECK_CONNECTION, timeout=4)
-			if configuration.KEYWORD in self.br.response().read():
+			response = self.br.open(configuration.WEBSITE_TO_CHECK_CONNECTION).read()
+			if configuration.KEYWORD in response:
 				return 1
 			else:
 				return 0
@@ -49,8 +45,8 @@ class check_the_mangas():
 			try:
 				while(last_chapter==False):
 					to_open = "http://www.mangareader.net/" + self.manga_name + "/" + str( int(self.manga_nownumber)+1 )
-					self.br.open( to_open, timeout=4 )
-					if "is not released yet. If you liked" in self.br.response().read():
+					response = self.br.open( to_open).read()
+					if "is not released yet. If you liked" in response:
 						last_chapter = True
 						if self.manga_name + ":" + str(self.manga_nownumber) not in open(configuration.DATA_FILE, "r").read():
 							Thread(target=self.exec_cmd).start()
@@ -60,7 +56,7 @@ class check_the_mangas():
 						self.manga_nownumber = str( int(self.manga_nownumber)+1 )
 			except Exception,e :
 				print e
-				if "is not released yet. If you liked" in self.br.response().read():
+				if "is not released yet. If you liked" in response:
 					if self.manga_name + ":" + str(self.manga_nownumber) not in open(configuration.DATA_FILE, "r").read():
 						configuration.backup()
 						open(configuration.DATA_FILE,'w').write(open(configuration.DATA_FILE+".bak", "r").read().replace(self.manga_name+":"+str(self.manga_oldnumber)+":"+ self.manga_olddate, self.manga_name+":"+str(self.manga_nownumber)+":"+self.nowdate))
@@ -68,10 +64,9 @@ class check_the_mangas():
 
 def connection():
 	try:
-		br = mechanize.Browser()
-		br.set_handle_robots(False)
-		br.open(configuration.WEBSITE_TO_CHECK_CONNECTION, timeout=4)
-		if configuration.KEYWORD in br.response().read():
+		br = URLopener()
+		response = br.open(configuration.WEBSITE_TO_CHECK_CONNECTION).read()
+		if configuration.KEYWORD in response:
 			return 1
 		else:
 			return 0

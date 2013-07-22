@@ -9,7 +9,6 @@ It shows updates about:
 * emails
 
 ###How to use
-* Install the mechanize module.
 * Open the files configuration.py and update to your needs.
 * Add a symlink to uppdater.py and updater-frontend.py to your bin or create a script in you bin dir starting the program.
 * You can use this as an example. :
