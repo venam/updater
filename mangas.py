@@ -33,6 +33,7 @@ class check_the_mangas():
 			else:
 				return 0
 		except:
+			print "manga connection"
 			return 0
 
 	def exec_cmd(self):
@@ -47,16 +48,20 @@ class check_the_mangas():
 				while(last_chapter==False):
 					to_open = "http://www.mangareader.net/" + self.manga_name + "/" + str( int(self.manga_nownumber)+1 )
 					response = self.br.open( to_open).read()
-					if "is not released yet. If you liked" in response:
+					if "is not released yet" in response or "not published yet" in response or response == "":
 						last_chapter = True
 						if self.manga_name + ":" + str(self.manga_nownumber) not in open(configuration.DATA_FILE, "r").read():
 							Thread(target=self.exec_cmd).start()
 							configuration.backup()
 							open(configuration.DATA_FILE,'w').write(open(configuration.DATA_FILE+".bak", "r").read().replace(self.manga_name+":"+str(self.manga_oldnumber)+":"+ self.manga_olddate, self.manga_name+":"+str(self.manga_nownumber)+":"+self.nowdate))
 					else:
+						print "not last chapter"
+						open("/home/raptor/.my_updater/html.html",'w').write(response)
+						exit(0)
 						self.manga_nownumber = str( int(self.manga_nownumber)+1 )
 			except Exception,e :
 				print e
+				print "manga run"
 				if "is not released yet. If you liked" in response:
 					if self.manga_name + ":" + str(self.manga_nownumber) not in open(configuration.DATA_FILE, "r").read():
 						configuration.backup()
