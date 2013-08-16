@@ -56,8 +56,6 @@ class check_the_mangas():
 							open(configuration.DATA_FILE,'w').write(open(configuration.DATA_FILE+".bak", "r").read().replace(self.manga_name+":"+str(self.manga_oldnumber)+":"+ self.manga_olddate, self.manga_name+":"+str(self.manga_nownumber)+":"+self.nowdate))
 					else:
 						print "not last chapter"
-						open("/home/raptor/.my_updater/html.html",'w').write(response)
-						exit(0)
 						self.manga_nownumber = str( int(self.manga_nownumber)+1 )
 			except Exception,e :
 				print e
